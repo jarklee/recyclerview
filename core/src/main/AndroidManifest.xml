@@ -1,0 +1,18 @@
+<!--
+  ~ /*******************************************************************************
+  ~ * Copyright Ⓒ 2016. Dotohsoft.com. All right reserved
+  ~ * Author TrinhQuan. Create on 2016/11/20
+  ~ ********************************************************************************/
+  -->
+
+<manifest package="com.tq.libs.recyclerview.core"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application android:allowBackup="true"
+                 android:label="@string/app_name"
+                 android:supportsRtl="true"
+    >
+
+    </application>
+
+</manifest>
