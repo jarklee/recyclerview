@@ -15,7 +15,7 @@ import java.util.List;
 
 public interface RecyclerViewModule<VH extends RecyclerView.ViewHolder> {
 
-    void attachAdapter(ModuleRecyclerViewAdapter<VH> adapter);
+    void attachAdapter(RecyclerViewModuleAdapter<VH> adapter);
 
     VH onCreateViewHolder(ViewGroup parent, int viewType);
 

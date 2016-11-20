@@ -13,11 +13,11 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-public class ModuleRecyclerViewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
+public class RecyclerViewModuleAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 
     private RecyclerViewModule<VH> recyclerViewModule;
 
-    public ModuleRecyclerViewAdapter(RecyclerViewModule<VH> recyclerViewModule) {
+    public RecyclerViewModuleAdapter(RecyclerViewModule<VH> recyclerViewModule) {
         attachRecyclerViewModule(recyclerViewModule);
     }
 

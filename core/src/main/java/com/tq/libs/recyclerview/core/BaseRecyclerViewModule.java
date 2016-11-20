@@ -15,10 +15,10 @@ import java.util.List;
 public abstract class BaseRecyclerViewModule<VH extends RecyclerView.ViewHolder>
         implements RecyclerViewModule<VH> {
 
-    private ModuleRecyclerViewAdapter<VH> adapter;
+    private RecyclerViewModuleAdapter<VH> adapter;
 
     @Override
-    public void attachAdapter(ModuleRecyclerViewAdapter<VH> adapter) {
+    public void attachAdapter(RecyclerViewModuleAdapter<VH> adapter) {
         this.adapter = adapter;
     }
 
