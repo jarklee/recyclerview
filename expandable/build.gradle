@@ -9,7 +9,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 
-group='com.github.tq-iron'
+group='com.github.jarklee'
 
 android {
     compileSdkVersion 24
