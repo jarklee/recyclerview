@@ -119,7 +119,7 @@ class ExpandableCalculateBasedList implements ExpandableList {
     @Override
     public ExpandableGroup remove(int groupIndex) {
         int groupPosition = getGroupPositionForIndex(groupIndex);
-        if (groupPosition != -1) {
+        if (groupPosition == -1) {
             return null;
         }
         ExpandableGroup group = _groups.remove(groupIndex);
