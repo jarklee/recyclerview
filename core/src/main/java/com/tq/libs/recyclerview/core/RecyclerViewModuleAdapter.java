@@ -42,6 +42,20 @@ public class RecyclerViewModuleAdapter<VH extends RecyclerView.ViewHolder> exten
     }
 
     @Override
+    public void onViewRecycled(VH holder) {
+        if (recyclerViewModule != null) {
+            recyclerViewModule.onViewRecycled(holder);
+        }
+        super.onViewRecycled(holder);
+    }
+
+    @Override
+    public boolean onFailedToRecycleView(VH holder) {
+        return recyclerViewModule == null ? super.onFailedToRecycleView(holder)
+                : recyclerViewModule.onFailedToRecycleView(holder);
+    }
+
+    @Override
     public VH onCreateViewHolder(ViewGroup parent, int viewType) {
         return recyclerViewModule == null ? null : recyclerViewModule.onCreateViewHolder(parent, viewType);
     }

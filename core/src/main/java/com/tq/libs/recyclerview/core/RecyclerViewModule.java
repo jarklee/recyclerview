@@ -29,4 +29,7 @@ public interface RecyclerViewModule<VH extends RecyclerView.ViewHolder> {
 
     long getItemId(int position);
 
+    void onViewRecycled(VH holder);
+
+    boolean onFailedToRecycleView(VH holder);
 }

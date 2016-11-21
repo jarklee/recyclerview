@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.tq.libs.recyclerview.core.SelfBindViewHolder;
 
+import java.util.Collection;
 import java.util.List;
 
 @SuppressLint("DefaultLocale")
@@ -20,7 +21,7 @@ public abstract class ExpandableRecyclerViewModule<PARENT extends GroupViewHolde
         CHILD extends ChildViewHolder>
         extends InternalExpandableRecyclerViewModule<PARENT, CHILD, SelfBindViewHolder> {
 
-    private final ExpandableList _expandableList;
+    protected final ExpandableList _expandableList;
     private final UnFlatGroupFlyweight _flatGroup;
 
     public ExpandableRecyclerViewModule() {
@@ -29,7 +30,7 @@ public abstract class ExpandableRecyclerViewModule<PARENT extends GroupViewHolde
 
     public ExpandableRecyclerViewModule(List<? extends ExpandableGroup> expandableGroups) {
         _flatGroup = new UnFlatGroupFlyweight();
-        _expandableList = new ExpandableList(expandableGroups);
+        _expandableList = new ExpandableList(this, expandableGroups);
     }
 
     public ExpandableList getExpandableList() {
@@ -37,16 +38,28 @@ public abstract class ExpandableRecyclerViewModule<PARENT extends GroupViewHolde
     }
 
     @Override
-    public SelfBindViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public final SelfBindViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (isChildViewType(viewType)) {
-            return onCreateChildViewHolder(parent, decodeViewType(viewType, true));
+            return onCreateChildViewHolder(parent, decodeChildViewType(viewType));
         }
-        return onCreateGroupViewHolder(parent, viewType);
+        GroupViewHolder groupViewHolder = onCreateGroupViewHolder(parent, viewType);
+        if (groupViewHolder != null) {
+            groupViewHolder.setExpandableModule(this);
+        }
+        return groupViewHolder;
+    }
+
+    @Override
+    public boolean onFailedToRecycleView(SelfBindViewHolder holder) {
+        if (holder != null && holder instanceof GroupViewHolder) {
+            ((GroupViewHolder) holder).setExpandableModule(null);
+        }
+        return super.onFailedToRecycleView(holder);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public void onBindViewHolder(SelfBindViewHolder holder, int position) {
+    public final void onBindViewHolder(SelfBindViewHolder holder, int position) {
         Object data = getItemAtPosition(position);
         if (holder != null) {
             holder.bindData(data, position);
@@ -55,36 +68,61 @@ public abstract class ExpandableRecyclerViewModule<PARENT extends GroupViewHolde
 
     @SuppressWarnings("unchecked")
     @Override
-    public void onBindViewHolder(SelfBindViewHolder holder, int position, List<Object> payloads) {
+    public final void onBindViewHolder(SelfBindViewHolder holder, int position, List<Object> payloads) {
         Object data = getItemAtPosition(position);
         if (holder != null) {
             holder.bindData(data, position, payloads);
         }
     }
 
+    public void expandGroup(int groupIndex) {
+        _expandableList.expandGroup(groupIndex);
+    }
+
+    public void collapseGroup(int groupIndex) {
+        _expandableList.collapseGroup(groupIndex);
+    }
+
+    public void addGroup(ExpandableGroup group) {
+        _expandableList.add(group);
+    }
+
+    public void addGroups(Collection<? extends ExpandableGroup> groups) {
+        _expandableList.addAll(groups);
+    }
+
+    public ExpandableGroup removeGroup(int groupPosition) {
+        return _expandableList.remove(groupPosition);
+    }
+
+    public void removeAllGroups() {
+        _expandableList.removeAll();
+    }
+
     @Override
-    public int getItemCount() {
+    public final int getItemCount() {
         return _expandableList.getVisibleItemCount();
     }
 
-    public Object getItemAtPosition(int position) {
+    @Override
+    public final int getItemViewType(int position) {
         UnFlatGroupFlyweight groupFlyweight = _flatGroup;
         _expandableList.unFlat(groupFlyweight, position);
         if (groupFlyweight.isChild()) {
-            return _expandableList.get(groupFlyweight.getGroupPosition())
-                    .get(groupFlyweight.getChildPosition());
+            int childViewType = getChildViewType(groupFlyweight.getChildIndex(),
+                    groupFlyweight.getGroupIndex());
+            return encodeChildViewType(childViewType);
         }
-        return _expandableList.get(groupFlyweight.getGroupPosition());
+        return getGroupViewType(groupFlyweight.getGroupIndex());
     }
 
-    @Override
-    public int getItemViewType(int position) {
+    private Object getItemAtPosition(int position) {
         UnFlatGroupFlyweight groupFlyweight = _flatGroup;
         _expandableList.unFlat(groupFlyweight, position);
         if (groupFlyweight.isChild()) {
-            return getChildViewType(groupFlyweight.getChildPosition(), groupFlyweight.getGroupPosition());
+            return groupFlyweight.getGroup().get(groupFlyweight.getChildIndex());
         }
-        return getGroupViewType(groupFlyweight.getGroupPosition());
+        return groupFlyweight.getGroup();
     }
 
     private boolean isChildViewType(int viewType) {
@@ -104,18 +142,12 @@ public abstract class ExpandableRecyclerViewModule<PARENT extends GroupViewHolde
         return true;
     }
 
-    private int decodeViewType(int viewType, boolean isChild) {
-        if (isChild) {
-            return viewType - getGroupViewTypeCount();
-        }
-        return viewType;
+    private int decodeChildViewType(int viewType) {
+        return viewType - getGroupViewTypeCount();
     }
 
-    private int encodeViewType(int viewType, boolean isChild) {
-        if (isChild) {
-            return viewType + getGroupViewTypeCount();
-        }
-        return viewType;
+    private int encodeChildViewType(int childViewType) {
+        return childViewType + getGroupViewTypeCount();
     }
 
     /**
@@ -142,14 +174,18 @@ public abstract class ExpandableRecyclerViewModule<PARENT extends GroupViewHolde
      * @return view type for child view type in a group at that child position in group
      * see method {@link #getChildViewTypeCount()} getChildViewTypeCount
      */
-    public abstract int getChildViewType(int childPosition, int groupPosition);
+    public int getChildViewType(int childPosition, int groupPosition) {
+        return 0;
+    }
 
     /**
      * @param groupPosition group position
      * @return view type for group view type
      * see method {@link #getGroupViewTypeCount()} getGroupViewTypeCount
      */
-    public abstract int getGroupViewType(int groupPosition);
+    public int getGroupViewType(int groupPosition) {
+        return 0;
+    }
 
     /**
      * @param parent        The ViewGroup into which the new View will be added after it is bound to

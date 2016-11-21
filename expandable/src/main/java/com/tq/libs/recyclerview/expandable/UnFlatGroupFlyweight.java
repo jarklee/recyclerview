@@ -10,36 +10,30 @@ package com.tq.libs.recyclerview.expandable;
 
 class UnFlatGroupFlyweight {
 
-    private int groupPosition;
+    private int groupIndex;
 
-    private int childPosition;
-
-    private boolean isChild;
+    private int childIndex;
 
     private ExpandableGroup group;
 
-    UnFlatGroupFlyweight() {
-
-    }
-
     public boolean isChild() {
-        return childPosition >= 0;
+        return childIndex >= 0;
     }
 
-    public int getGroupPosition() {
-        return groupPosition;
+    public int getGroupIndex() {
+        return groupIndex;
     }
 
-    public void setGroupPosition(int groupPosition) {
-        this.groupPosition = groupPosition;
+    public void setGroupIndex(int groupIndex) {
+        this.groupIndex = groupIndex;
     }
 
-    public int getChildPosition() {
-        return childPosition;
+    public int getChildIndex() {
+        return childIndex;
     }
 
-    public void setChildPosition(int childPosition) {
-        this.childPosition = childPosition;
+    public void setChildIndex(int childIndex) {
+        this.childIndex = childIndex;
     }
 
     public ExpandableGroup getGroup() {

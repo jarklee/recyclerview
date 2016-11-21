@@ -21,10 +21,6 @@ public class ExpandableGroup<ITEM> {
         this.items = items;
     }
 
-    public List<ITEM> getItems() {
-        return items;
-    }
-
     public String getTitle() {
         return title;
     }

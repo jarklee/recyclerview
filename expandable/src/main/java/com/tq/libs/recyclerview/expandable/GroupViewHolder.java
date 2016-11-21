@@ -8,6 +8,7 @@
 
 package com.tq.libs.recyclerview.expandable;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.tq.libs.recyclerview.core.SelfBindViewHolder;
@@ -15,15 +16,37 @@ import com.tq.libs.recyclerview.core.SelfBindViewHolder;
 public abstract class GroupViewHolder<DATA extends ExpandableGroup>
         extends SelfBindViewHolder<DATA> {
 
+    private ExpandableRecyclerViewModule _expandableModule;
+
     public GroupViewHolder(View itemView) {
         super(itemView);
     }
 
-    public void expandGroup() {
-
+    void setExpandableModule(ExpandableRecyclerViewModule module) {
+        _expandableModule = module;
     }
 
-    public void collapseGroup() {
+    public final void expandGroup() {
+        ExpandableRecyclerViewModule module = _expandableModule;
+        if (module == null) {
+            return;
+        }
+        int position = getAdapterPosition();
+        if (position == RecyclerView.NO_POSITION) {
+            return;
+        }
+        _expandableModule.expandGroup(position);
+    }
 
+    public final void collapseGroup() {
+        ExpandableRecyclerViewModule module = _expandableModule;
+        if (module == null) {
+            return;
+        }
+        int position = getAdapterPosition();
+        if (position == RecyclerView.NO_POSITION) {
+            return;
+        }
+        _expandableModule.collapseGroup(position);
     }
 }

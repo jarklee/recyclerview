@@ -37,6 +37,16 @@ public abstract class BaseRecyclerViewModule<VH extends RecyclerView.ViewHolder>
         return RecyclerView.NO_ID;
     }
 
+    @Override
+    public void onViewRecycled(VH holder) {
+
+    }
+
+    @Override
+    public boolean onFailedToRecycleView(VH holder) {
+        return false;
+    }
+
     public final void notifyDataSetChanged() {
         if (adapter != null) {
             adapter.notifyDataSetChanged();
