@@ -19,16 +19,25 @@ public abstract class ExpandableRecyclerViewModule<PARENT extends GroupViewHolde
         CHILD extends ChildViewHolder>
         extends InternalExpandableRecyclerViewModule<PARENT, CHILD, ExpandableViewHolder> {
 
-    protected final ExpandableList _expandableList;
+    private final ExpandableList _expandableList;
     private final UnFlatGroupFlyweight _flatGroup;
 
     public ExpandableRecyclerViewModule() {
-        this(null);
+        this(null, "calculate");
+    }
+
+    public ExpandableRecyclerViewModule(String expandableListType) {
+        this(null, expandableListType);
     }
 
     public ExpandableRecyclerViewModule(List<? extends ExpandableGroup> expandableGroups) {
+        this(expandableGroups, "calculate");
+    }
+
+    public ExpandableRecyclerViewModule(List<? extends ExpandableGroup> expandableGroups,
+                                        String expandableListType) {
         _flatGroup = new UnFlatGroupFlyweight();
-        _expandableList = ExpandableListFactory.createList("calculate", this, expandableGroups);
+        _expandableList = ExpandableListFactory.createList(expandableListType, this, expandableGroups);
     }
 
     public ExpandableList getExpandableList() {
