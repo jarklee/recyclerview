@@ -37,6 +37,10 @@ public class RecyclerViewModuleAdapter<VH extends RecyclerView.ViewHolder> exten
         this.recyclerViewModule = recyclerViewModule;
     }
 
+    public RecyclerViewModule<VH> getRecyclerViewModule() {
+        return recyclerViewModule;
+    }
+
     @Override
     public VH onCreateViewHolder(ViewGroup parent, int viewType) {
         return recyclerViewModule == null ? null : recyclerViewModule.onCreateViewHolder(parent, viewType);
