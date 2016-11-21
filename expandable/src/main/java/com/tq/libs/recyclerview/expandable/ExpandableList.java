@@ -166,6 +166,9 @@ class ExpandableList {
             return;
         }
         ExpandableGroup group = _groups.get(groupIndex);
+        if (group.isExpand()) {
+            return;
+        }
         group.setExpand(true);
         _expandableModule.notifyItemChanged(groupPosition);
         _expandableModule.notifyItemRangeInserted(groupPosition + 1, group.getItemCount());
@@ -177,8 +180,23 @@ class ExpandableList {
             return;
         }
         ExpandableGroup group = _groups.get(groupIndex);
+        if (!group.isExpand()) {
+            return;
+        }
         group.setExpand(false);
         _expandableModule.notifyItemChanged(groupPosition);
         _expandableModule.notifyItemRangeRemoved(groupPosition + 1, group.getItemCount());
+    }
+
+    public void expandGroupContainChild(int position) {
+        UnFlatGroupFlyweight flyweight = new UnFlatGroupFlyweight();
+        unFlat(flyweight, position);
+        expandGroup(flyweight.getGroupIndex());
+    }
+
+    public void collapseGroupContainChild(int position) {
+        UnFlatGroupFlyweight flyweight = new UnFlatGroupFlyweight();
+        unFlat(flyweight, position);
+        collapseGroup(flyweight.getGroupIndex());
     }
 }

@@ -11,15 +11,13 @@ package com.tq.libs.recyclerview.expandable;
 import android.annotation.SuppressLint;
 import android.view.ViewGroup;
 
-import com.tq.libs.recyclerview.core.SelfBindViewHolder;
-
 import java.util.Collection;
 import java.util.List;
 
 @SuppressLint("DefaultLocale")
 public abstract class ExpandableRecyclerViewModule<PARENT extends GroupViewHolder,
         CHILD extends ChildViewHolder>
-        extends InternalExpandableRecyclerViewModule<PARENT, CHILD, SelfBindViewHolder> {
+        extends InternalExpandableRecyclerViewModule<PARENT, CHILD, ExpandableViewHolder> {
 
     protected final ExpandableList _expandableList;
     private final UnFlatGroupFlyweight _flatGroup;
@@ -38,28 +36,31 @@ public abstract class ExpandableRecyclerViewModule<PARENT extends GroupViewHolde
     }
 
     @Override
-    public final SelfBindViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public final ExpandableViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        ExpandableViewHolder holder;
         if (isChildViewType(viewType)) {
-            return onCreateChildViewHolder(parent, decodeChildViewType(viewType));
+            holder = onCreateChildViewHolder(parent, decodeChildViewType(viewType));
+        } else {
+            holder = onCreateGroupViewHolder(parent, viewType);
         }
-        GroupViewHolder groupViewHolder = onCreateGroupViewHolder(parent, viewType);
-        if (groupViewHolder != null) {
-            groupViewHolder.setExpandableModule(this);
+        if (holder != null) {
+            holder.setExpandableModule(this);
         }
-        return groupViewHolder;
+        return holder;
     }
 
     @Override
-    public boolean onFailedToRecycleView(SelfBindViewHolder holder) {
-        if (holder != null && holder instanceof GroupViewHolder) {
-            ((GroupViewHolder) holder).setExpandableModule(null);
+    public boolean onFailedToRecycleView(ExpandableViewHolder holder) {
+        if (holder != null) {
+            holder.setExpandableModule(null);
+            return false;
         }
-        return super.onFailedToRecycleView(holder);
+        return super.onFailedToRecycleView(null);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public final void onBindViewHolder(SelfBindViewHolder holder, int position) {
+    public final void onBindViewHolder(ExpandableViewHolder holder, int position) {
         Object data = getItemAtPosition(position);
         if (holder != null) {
             holder.bindData(data, position);
@@ -68,7 +69,7 @@ public abstract class ExpandableRecyclerViewModule<PARENT extends GroupViewHolde
 
     @SuppressWarnings("unchecked")
     @Override
-    public final void onBindViewHolder(SelfBindViewHolder holder, int position, List<Object> payloads) {
+    public final void onBindViewHolder(ExpandableViewHolder holder, int position, List<Object> payloads) {
         Object data = getItemAtPosition(position);
         if (holder != null) {
             holder.bindData(data, position, payloads);
@@ -81,6 +82,14 @@ public abstract class ExpandableRecyclerViewModule<PARENT extends GroupViewHolde
 
     public void collapseGroup(int groupIndex) {
         _expandableList.collapseGroup(groupIndex);
+    }
+
+    public void expandGroupContainChild(int position) {
+        _expandableList.expandGroupContainChild(position);
+    }
+
+    public void collapseGroupContainChild(int position) {
+        _expandableList.collapseGroupContainChild(position);
     }
 
     public void addGroup(ExpandableGroup group) {

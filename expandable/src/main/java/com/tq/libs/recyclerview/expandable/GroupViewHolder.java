@@ -11,19 +11,11 @@ package com.tq.libs.recyclerview.expandable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.tq.libs.recyclerview.core.SelfBindViewHolder;
-
 public abstract class GroupViewHolder<DATA extends ExpandableGroup>
-        extends SelfBindViewHolder<DATA> {
-
-    private ExpandableRecyclerViewModule _expandableModule;
+        extends ExpandableViewHolder<DATA> {
 
     public GroupViewHolder(View itemView) {
         super(itemView);
-    }
-
-    void setExpandableModule(ExpandableRecyclerViewModule module) {
-        _expandableModule = module;
     }
 
     public final void expandGroup() {
