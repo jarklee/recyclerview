@@ -28,7 +28,7 @@ public abstract class ExpandableRecyclerViewModule<PARENT extends GroupViewHolde
 
     public ExpandableRecyclerViewModule(List<? extends ExpandableGroup> expandableGroups) {
         _flatGroup = new UnFlatGroupFlyweight();
-        _expandableList = new ExpandableList(this, expandableGroups);
+        _expandableList = ExpandableListFactory.createList("calculate", this, expandableGroups);
     }
 
     public ExpandableList getExpandableList() {
@@ -76,19 +76,19 @@ public abstract class ExpandableRecyclerViewModule<PARENT extends GroupViewHolde
         }
     }
 
-    public void expandGroup(int groupIndex) {
+    public final void expandGroup(int groupIndex) {
         _expandableList.expandGroup(groupIndex);
     }
 
-    public void collapseGroup(int groupIndex) {
+    public final void collapseGroup(int groupIndex) {
         _expandableList.collapseGroup(groupIndex);
     }
 
-    public void expandGroupContainChild(int position) {
+    public final void expandGroupContainChild(int position) {
         _expandableList.expandGroupContainChild(position);
     }
 
-    public void collapseGroupContainChild(int position) {
+    public final void collapseGroupContainChild(int position) {
         _expandableList.collapseGroupContainChild(position);
     }
 
