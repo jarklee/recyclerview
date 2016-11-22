@@ -1,0 +1,12 @@
+<!--
+  ~ /*******************************************************************************
+  ~ * Copyright Ⓒ 2016. aimesoft.com. All right reserved
+  ~ * Author TrinhQuan. Create on 2016/10/22
+  ~ ********************************************************************************/
+  -->
+
+<resources>
+    <string name="app_name">UmaidPro</string>
+    <string name="error_no_connection">Not connection</string>
+    <string name="action_ok">Ok</string>
+</resources>
