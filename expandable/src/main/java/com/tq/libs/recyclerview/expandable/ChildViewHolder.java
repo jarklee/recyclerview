@@ -26,7 +26,7 @@ public abstract class ChildViewHolder<DATA> extends ExpandableViewHolder<DATA> {
         if (position == RecyclerView.NO_POSITION) {
             return;
         }
-        _expandableModule.expandGroupContainChild(position);
+        _expandableModule.expandGroupAtPosition(position);
     }
 
     public final void collapseGroup() {
@@ -38,6 +38,6 @@ public abstract class ChildViewHolder<DATA> extends ExpandableViewHolder<DATA> {
         if (position == RecyclerView.NO_POSITION) {
             return;
         }
-        _expandableModule.collapseGroupContainChild(position);
+        _expandableModule.collapseGroupAtPosition(position);
     }
 }

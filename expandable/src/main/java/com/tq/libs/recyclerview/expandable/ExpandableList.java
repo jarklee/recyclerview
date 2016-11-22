@@ -29,10 +29,6 @@ public interface ExpandableList {
 
     void collapseGroup(int groupIndex);
 
-    void expandGroupContainChild(int position);
-
-    void collapseGroupContainChild(int position);
-
     void expandGroupAtPosition(int groupPosition);
 
     void collapseGroupAtPosition(int groupPosition);

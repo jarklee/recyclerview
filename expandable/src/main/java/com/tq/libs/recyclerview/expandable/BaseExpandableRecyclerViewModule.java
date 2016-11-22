@@ -88,14 +88,6 @@ public abstract class BaseExpandableRecyclerViewModule<PARENT extends GroupViewH
         _expandableList.expandOrCollapseGroupAtPosition(groupPosition);
     }
 
-    public final void expandGroupContainChild(int position) {
-        _expandableList.expandGroupContainChild(position);
-    }
-
-    public final void collapseGroupContainChild(int position) {
-        _expandableList.collapseGroupContainChild(position);
-    }
-
     public void addGroup(ExpandableGroup group) {
         _expandableList.add(group);
     }

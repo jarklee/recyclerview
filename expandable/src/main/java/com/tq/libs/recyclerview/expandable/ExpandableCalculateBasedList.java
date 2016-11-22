@@ -202,20 +202,6 @@ class ExpandableCalculateBasedList implements ExpandableList {
     }
 
     @Override
-    public void expandGroupContainChild(int position) {
-        UnFlatGroupFlyweight flyweight = new UnFlatGroupFlyweight();
-        unFlat(flyweight, position);
-        expandGroup(flyweight.getGroupIndex());
-    }
-
-    @Override
-    public void collapseGroupContainChild(int position) {
-        UnFlatGroupFlyweight flyweight = new UnFlatGroupFlyweight();
-        unFlat(flyweight, position);
-        collapseGroup(flyweight.getGroupIndex());
-    }
-
-    @Override
     public void expandGroupAtPosition(int groupPosition) {
         UnFlatGroupFlyweight flyweight = new UnFlatGroupFlyweight();
         unFlat(flyweight, groupPosition);

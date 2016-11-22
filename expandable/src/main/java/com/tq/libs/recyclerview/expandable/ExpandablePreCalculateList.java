@@ -189,16 +189,6 @@ class ExpandablePreCalculateList implements ExpandableList {
     }
 
     @Override
-    public void expandGroupContainChild(int position) {
-        expandGroup(_cacheGroupIndex.get(position));
-    }
-
-    @Override
-    public void collapseGroupContainChild(int position) {
-        collapseGroup(_cacheGroupIndex.get(position));
-    }
-
-    @Override
     public void expandGroupAtPosition(int groupPosition) {
         expandGroup(_cacheGroupIndex.get(groupPosition));
     }
