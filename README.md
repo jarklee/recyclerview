@@ -3,7 +3,7 @@
 
 *This project include all stuff support for recyclerview. Currently support expandable recyclerview adapter.*
 
-#Content table
+#Table of contents
 
 1. [Expandable Recyclerview module](#expandable-recyclerview-module)
 	1. [Install](#install)
