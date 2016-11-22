@@ -8,6 +8,8 @@
 
 package com.tq.libs.recyclerview.expandable;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ExpandableGroup<ITEM> {
@@ -39,5 +41,18 @@ public class ExpandableGroup<ITEM> {
 
     public ITEM get(int position) {
         return items == null ? null : items.get(position);
+    }
+
+    public static <ITEM> ExpandableGroup<ITEM> from(String title, List<ITEM> items) {
+        return new ExpandableGroup<>(title, items);
+    }
+
+    public static <ITEM> ExpandableGroup<ITEM> from(String title, ITEM... items) {
+        if (items == null) {
+            return new ExpandableGroup<>(title, null);
+        }
+        List<ITEM> itemList = new ArrayList<>(items.length);
+        Collections.addAll(itemList, items);
+        return new ExpandableGroup<>(title, itemList);
     }
 }

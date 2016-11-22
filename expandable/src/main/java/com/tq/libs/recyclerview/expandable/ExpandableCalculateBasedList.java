@@ -18,9 +18,9 @@ import java.util.List;
 class ExpandableCalculateBasedList implements ExpandableList {
 
     private final List<ExpandableGroup> _groups;
-    private final ExpandableRecyclerViewModule _expandableModule;
+    private final BaseExpandableRecyclerViewModule _expandableModule;
 
-    ExpandableCalculateBasedList(ExpandableRecyclerViewModule expandableModule,
+    ExpandableCalculateBasedList(BaseExpandableRecyclerViewModule expandableModule,
                                  Collection<? extends ExpandableGroup> groups) {
         this._expandableModule = expandableModule;
         if (groups != null) {
@@ -127,7 +127,7 @@ class ExpandableCalculateBasedList implements ExpandableList {
             return null;
         }
         if (group.isExpand()) {
-            _expandableModule.notifyItemRangeRemoved(groupPosition, group.getItemCount());
+            _expandableModule.notifyItemRangeRemoved(groupPosition, group.getItemCount() + 1);
         } else {
             _expandableModule.notifyItemRemoved(groupPosition);
         }

@@ -18,7 +18,7 @@ public abstract class ChildViewHolder<DATA> extends ExpandableViewHolder<DATA> {
     }
 
     public final void expandGroup() {
-        ExpandableRecyclerViewModule module = _expandableModule;
+        BaseExpandableRecyclerViewModule module = _expandableModule;
         if (module == null) {
             return;
         }
@@ -30,7 +30,7 @@ public abstract class ChildViewHolder<DATA> extends ExpandableViewHolder<DATA> {
     }
 
     public final void collapseGroup() {
-        ExpandableRecyclerViewModule module = _expandableModule;
+        BaseExpandableRecyclerViewModule module = _expandableModule;
         if (module == null) {
             return;
         }

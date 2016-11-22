@@ -18,7 +18,7 @@ import java.util.List;
 class ExpandablePreCalculateList implements ExpandableList {
 
     private final List<ExpandableGroup> _groups;
-    private final ExpandableRecyclerViewModule _expandableModule;
+    private final BaseExpandableRecyclerViewModule _expandableModule;
 
     private final SparseArray<Object> _cachedObject;
 
@@ -30,7 +30,7 @@ class ExpandablePreCalculateList implements ExpandableList {
 
     private int _itemCount;
 
-    ExpandablePreCalculateList(ExpandableRecyclerViewModule expandableModule,
+    ExpandablePreCalculateList(BaseExpandableRecyclerViewModule expandableModule,
                                List<? extends ExpandableGroup> groups) {
         this._expandableModule = expandableModule;
         if (groups != null) {
@@ -141,7 +141,7 @@ class ExpandablePreCalculateList implements ExpandableList {
             _expandableModule.notifyDataSetChanged();
         } else {
             if (group.isExpand()) {
-                _expandableModule.notifyItemRangeRemoved(groupPosition, group.getItemCount());
+                _expandableModule.notifyItemRangeRemoved(groupPosition, group.getItemCount() + 1);
             } else {
                 _expandableModule.notifyItemRemoved(groupPosition);
             }

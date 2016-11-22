@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ExpandableListFactory {
 
-    public static ExpandableList createList(String type, ExpandableRecyclerViewModule module,
+    public static ExpandableList createList(String type, BaseExpandableRecyclerViewModule module,
                                             List<? extends ExpandableGroup> groups) {
         if ("calculate".equals(type)) {
             return new ExpandableCalculateBasedList(module, groups);

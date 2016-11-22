@@ -14,13 +14,13 @@ import com.tq.libs.recyclerview.core.SelfBindViewHolder;
 
 public abstract class ExpandableViewHolder<DATA> extends SelfBindViewHolder<DATA> {
 
-    protected ExpandableRecyclerViewModule _expandableModule;
+    protected BaseExpandableRecyclerViewModule _expandableModule;
 
     public ExpandableViewHolder(View itemView) {
         super(itemView);
     }
 
-    void setExpandableModule(ExpandableRecyclerViewModule module) {
+    void setExpandableModule(BaseExpandableRecyclerViewModule module) {
         _expandableModule = module;
     }
 

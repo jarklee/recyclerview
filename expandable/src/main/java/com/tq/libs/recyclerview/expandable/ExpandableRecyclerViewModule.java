@@ -9,18 +9,15 @@
 package com.tq.libs.recyclerview.expandable;
 
 import android.annotation.SuppressLint;
+import android.support.annotation.IntRange;
 import android.view.ViewGroup;
 
-import java.util.Collection;
 import java.util.List;
 
 @SuppressLint("DefaultLocale")
 public abstract class ExpandableRecyclerViewModule<PARENT extends GroupViewHolder,
         CHILD extends ChildViewHolder>
-        extends InternalExpandableRecyclerViewModule<PARENT, CHILD, ExpandableViewHolder> {
-
-    private final ExpandableList _expandableList;
-    private final UnFlatGroupFlyweight _flatGroup;
+        extends BaseExpandableRecyclerViewModule<PARENT, CHILD> {
 
     public ExpandableRecyclerViewModule() {
         this(null, "calculate");
@@ -36,171 +33,64 @@ public abstract class ExpandableRecyclerViewModule<PARENT extends GroupViewHolde
 
     public ExpandableRecyclerViewModule(List<? extends ExpandableGroup> expandableGroups,
                                         String expandableListType) {
-        _flatGroup = new UnFlatGroupFlyweight();
-        _expandableList = ExpandableListFactory.createList(expandableListType, this, expandableGroups);
-    }
-
-    public ExpandableList getExpandableList() {
-        return _expandableList;
+        super(expandableGroups, expandableListType);
     }
 
     @Override
-    public final ExpandableViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ExpandableViewHolder holder;
+    public final ExpandableViewHolder onCreateItemViewHolder(ViewGroup parent, int viewType) {
         if (isChildViewType(viewType)) {
-            holder = onCreateChildViewHolder(parent, decodeChildViewType(viewType));
+            return onCreateChildViewHolder(parent, decodeViewTypeMark(viewType, true));
+        }
+        return onCreateGroupViewHolder(parent, decodeViewTypeMark(viewType, false));
+    }
+
+    @Override
+    public final int getItemViewType(int flatPosition, int groupPosition,
+                                     boolean isChild, int childPosition) {
+        if (isChild) {
+            return encodeViewTypeMark(getChildViewType(childPosition, groupPosition), true);
         } else {
-            holder = onCreateGroupViewHolder(parent, viewType);
+            return encodeViewTypeMark(getGroupViewType(groupPosition), false);
         }
-        if (holder != null) {
-            holder.setExpandableModule(this);
-        }
-        return holder;
-    }
-
-    @Override
-    public boolean onFailedToRecycleView(ExpandableViewHolder holder) {
-        if (holder != null) {
-            holder.setExpandableModule(null);
-            return false;
-        }
-        return super.onFailedToRecycleView(null);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public final void onBindViewHolder(ExpandableViewHolder holder, int position) {
-        Object data = getItemAtPosition(position);
-        if (holder != null) {
-            holder.bindData(data, position);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public final void onBindViewHolder(ExpandableViewHolder holder, int position, List<Object> payloads) {
-        Object data = getItemAtPosition(position);
-        if (holder != null) {
-            holder.bindData(data, position, payloads);
-        }
-    }
-
-    public final void expandGroup(int groupIndex) {
-        _expandableList.expandGroup(groupIndex);
-    }
-
-    public final void collapseGroup(int groupIndex) {
-        _expandableList.collapseGroup(groupIndex);
-    }
-
-    public final void expandGroupContainChild(int position) {
-        _expandableList.expandGroupContainChild(position);
-    }
-
-    public final void collapseGroupContainChild(int position) {
-        _expandableList.collapseGroupContainChild(position);
-    }
-
-    public void addGroup(ExpandableGroup group) {
-        _expandableList.add(group);
-    }
-
-    public void addGroups(Collection<? extends ExpandableGroup> groups) {
-        _expandableList.addAll(groups);
-    }
-
-    public ExpandableGroup removeGroup(int groupPosition) {
-        return _expandableList.remove(groupPosition);
-    }
-
-    public void removeAllGroups() {
-        _expandableList.removeAll();
-    }
-
-    @Override
-    public final int getItemCount() {
-        return _expandableList.getVisibleItemCount();
-    }
-
-    @Override
-    public final int getItemViewType(int position) {
-        UnFlatGroupFlyweight groupFlyweight = _flatGroup;
-        _expandableList.unFlat(groupFlyweight, position);
-        if (groupFlyweight.isChild()) {
-            int childViewType = getChildViewType(groupFlyweight.getChildIndex(),
-                    groupFlyweight.getGroupIndex());
-            return encodeChildViewType(childViewType);
-        }
-        return getGroupViewType(groupFlyweight.getGroupIndex());
-    }
-
-    private Object getItemAtPosition(int position) {
-        UnFlatGroupFlyweight groupFlyweight = _flatGroup;
-        _expandableList.unFlat(groupFlyweight, position);
-        if (groupFlyweight.isChild()) {
-            return groupFlyweight.getGroup().get(groupFlyweight.getChildIndex());
-        }
-        return groupFlyweight.getGroup();
     }
 
     private boolean isChildViewType(int viewType) {
-        if (viewType < 0) {
-            throw new IllegalArgumentException(
-                    String.format("unknown view type: view type could not be below zero, but %d", viewType));
-        }
-        int groupTypeCount = getGroupViewTypeCount();
-        if (viewType < groupTypeCount) {
-            return false;
-        }
-        int totalViewTypeCount = groupTypeCount + getChildViewTypeCount();
-        if (viewType >= totalViewTypeCount) {
-            throw new IllegalArgumentException(
-                    String.format("unknown view type: view type could not be over total view type count %d, but %d", totalViewTypeCount, viewType));
-        }
-        return true;
+        return (viewType & 0x1) != 0;
     }
 
-    private int decodeChildViewType(int viewType) {
-        return viewType - getGroupViewTypeCount();
+    private int decodeViewTypeMark(int viewType, boolean isChild) {
+        if (isChild) {
+            viewType = (viewType >> 13) & 0x3ffff;
+        } else {
+            viewType = (viewType >> 1) & 0xfff;
+        }
+        return viewType;
     }
 
-    private int encodeChildViewType(int childViewType) {
-        return childViewType + getGroupViewTypeCount();
+    private int encodeViewTypeMark(int viewType, boolean isChild) {
+        if (isChild) {
+            viewType = ((viewType << 13) | 0x1fff) & 0x7fffffff;
+        } else {
+            viewType = (viewType << 1) & 0x1fff;
+        }
+        return viewType;
     }
 
     /**
-     * @return number of group view type, derive class must use group view type start at 0.
-     * other view type must follow first view type by adding 1.
-     * view type for group holder will be generate automatically.
-     */
-    public int getGroupViewTypeCount() {
-        return 1;
-    }
-
-    /**
-     * @return number of child view type, derive class must use child view type start at 0.
-     * other view type must follow first view type by adding 1.
-     * view type for child holder will be generate automatically by adding group view type count.
-     */
-    public int getChildViewTypeCount() {
-        return 1;
-    }
-
-    /**
-     * @param childPosition child position in group
      * @param groupPosition group position
-     * @return view type for child view type in a group at that child position in group
-     * see method {@link #getChildViewTypeCount()} getChildViewTypeCount
+     * @param childPosition child position in group
+     * @return view type for child view type in range 0..262143
      */
-    public int getChildViewType(int childPosition, int groupPosition) {
+    @IntRange(from = 0, to = 0x3ffff) // take up 18 bit mark
+    public int getChildViewType(int groupPosition, int childPosition) {
         return 0;
     }
 
     /**
      * @param groupPosition group position
-     * @return view type for group view type
-     * see method {@link #getGroupViewTypeCount()} getGroupViewTypeCount
+     * @return view type for group view type in range 0..4095
      */
+    @IntRange(from = 0, to = 0xfff) // take up 12 bit mark
     public int getGroupViewType(int groupPosition) {
         return 0;
     }
@@ -209,8 +99,7 @@ public abstract class ExpandableRecyclerViewModule<PARENT extends GroupViewHolde
      * @param parent        The ViewGroup into which the new View will be added after it is bound to
      *                      an adapter position.
      * @param groupViewType decode group view type, should be compare direct with registered view
-     *                      type in derive class. See method {@link #getGroupViewTypeCount()}
-     *                      getGroupViewTypeCount
+     *                      type in derive class. Range 0..4095
      * @return Parent view holder for specific group type
      */
     public abstract PARENT onCreateGroupViewHolder(ViewGroup parent, int groupViewType);
@@ -219,8 +108,7 @@ public abstract class ExpandableRecyclerViewModule<PARENT extends GroupViewHolde
      * @param parent        The ViewGroup into which the new View will be added after it is bound to
      *                      an adapter position.
      * @param childViewType decode child view type, should be compare direct with registered view
-     *                      type in derive class. See method {@link #getChildViewTypeCount()}
-     *                      getGroupViewTypeCount
+     *                      type in derive class. Range 0..262143
      * @return Child view holder for specific group type
      */
     public abstract CHILD onCreateChildViewHolder(ViewGroup parent, int childViewType);
