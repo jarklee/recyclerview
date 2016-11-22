@@ -27,7 +27,7 @@ compile 'com.github.jarklee.recyclerview:expandable:<recyclerview-version>'
 public class ExpandableAdapter extends RecyclerViewModuleAdapter<ExpandableViewHolder> {
 
     @Inject
-    public MainAdapter() {
+    public ExpandableAdapter() {
         super(null);
     }
 }
@@ -35,9 +35,9 @@ public class ExpandableAdapter extends RecyclerViewModuleAdapter<ExpandableViewH
 * Instance expandable module for adapter.
 
 ```
-public class ExpandableModule extends ExpandableRecyclerViewModule<MainModule.GroupView, MainModule.ChildView> {
+public class ExpandableModule extends ExpandableRecyclerViewModule<GroupView, ChildView> {
 
-    public MainModule(List<? extends ExpandableGroup> expandableGroups) {
+    public ExpandableModule(List<? extends ExpandableGroup> expandableGroups) {
         super(expandableGroups);
     }
 
