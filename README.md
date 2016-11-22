@@ -8,7 +8,7 @@
 ##Install.
 
 
-```
+```java
 allprojects {
     repositories {
         ...
@@ -23,7 +23,7 @@ compile 'com.github.jarklee.recyclerview:expandable:<recyclerview-version>'
 * Instance adapter for recyclerview.
 
 
-```
+```java
 public class ExpandableAdapter extends RecyclerViewModuleAdapter<ExpandableViewHolder> {
 
     @Inject
@@ -34,7 +34,7 @@ public class ExpandableAdapter extends RecyclerViewModuleAdapter<ExpandableViewH
 ```
 * Instance expandable module for adapter.
 
-```
+```java
 public class ExpandableModule extends ExpandableRecyclerViewModule<GroupView, ChildView> {
 
     public ExpandableModule(List<? extends ExpandableGroup> expandableGroups) {
@@ -55,7 +55,7 @@ public class ExpandableModule extends ExpandableRecyclerViewModule<GroupView, Ch
 
 * Attach module to adapter.
 
-```
+```java
 ExpandableAdapter adapter = new ExpandableAdapter();
 
 ExpandableGroup<String> group1 = new ExpandableGroup<>("group1");
