@@ -51,7 +51,7 @@ public class ExampleInstrumentedTest {
 
             }
         };
-        list = ExpandableListFactory.createList("calculate", module, null);
+        list = ExpandableListFactory.createList("calc", module, null);
     }
 
     @After

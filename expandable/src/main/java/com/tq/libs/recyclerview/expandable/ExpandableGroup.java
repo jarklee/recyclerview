@@ -24,7 +24,7 @@ public class ExpandableGroup<ITEM> {
         this(title, (List<ITEM>) null);
     }
 
-    public ExpandableGroup(String title, ITEM... items) {
+    public ExpandableGroup(String title, ITEM[] items) {
         observers = new LinkedList<>();
         this.title = title;
         if (items != null) {

@@ -199,7 +199,7 @@ class ExpandablePreCalculateList implements ExpandableList {
         collapseGroup(_cacheGroupIndex.get(position));
     }
 
-    private GroupDataChangedListener groupDataChangedListener = new GroupDataChangedListener() {
+    private final GroupDataChangedListener groupDataChangedListener = new GroupDataChangedListener() {
         @Override
         public void onDataChanged() {
             _expandableModule.notifyDataSetChanged();
