@@ -8,7 +8,7 @@
 ##Install.
 
 
-```java
+```Gradle
 allprojects {
     repositories {
         ...
@@ -85,7 +85,7 @@ recyclerView.setAdapter(adapter);
 
 * Override method two methods below to create as many item type as you want.
 
-```
+```java
 public int getChildViewType(int groupPosition, int childPosition) {
     return 0;
 }
@@ -97,4 +97,4 @@ public int getGroupViewType(int groupPosition) {
 ```
 ###See example application.
 
-[https://github.com/jarklee/recyclerview/tree/master/app](example)
+[Example](https://github.com/jarklee/recyclerview/tree/master/app)
