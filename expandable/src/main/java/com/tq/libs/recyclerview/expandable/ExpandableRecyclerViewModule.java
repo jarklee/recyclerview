@@ -12,6 +12,8 @@ import android.annotation.SuppressLint;
 import android.support.annotation.IntRange;
 import android.view.ViewGroup;
 
+import com.tq.libs.recyclerview.expandable.anotations.ListType;
+
 import java.util.List;
 
 @SuppressLint("DefaultLocale")
@@ -20,19 +22,19 @@ public abstract class ExpandableRecyclerViewModule<PARENT extends GroupViewHolde
         extends BaseExpandableRecyclerViewModule<PARENT, CHILD> {
 
     public ExpandableRecyclerViewModule() {
-        this(null, "calculate");
+        this(null, "calc");
     }
 
-    public ExpandableRecyclerViewModule(String expandableListType) {
+    public ExpandableRecyclerViewModule(@ListType String expandableListType) {
         this(null, expandableListType);
     }
 
     public ExpandableRecyclerViewModule(List<? extends ExpandableGroup> expandableGroups) {
-        this(expandableGroups, "calculate");
+        this(expandableGroups, "calc");
     }
 
     public ExpandableRecyclerViewModule(List<? extends ExpandableGroup> expandableGroups,
-                                        String expandableListType) {
+                                        @ListType String expandableListType) {
         super(expandableGroups, expandableListType);
     }
 

@@ -9,6 +9,7 @@
 package com.tq.libs.recyclerview.expandable;
 
 import android.annotation.SuppressLint;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,7 +21,7 @@ class ExpandableCalculateBasedList implements ExpandableList {
     private final List<ExpandableGroup> _groups;
     private final BaseExpandableRecyclerViewModule _expandableModule;
 
-    ExpandableCalculateBasedList(BaseExpandableRecyclerViewModule expandableModule,
+    ExpandableCalculateBasedList(@NonNull BaseExpandableRecyclerViewModule expandableModule,
                                  Collection<? extends ExpandableGroup> groups) {
         this._expandableModule = expandableModule;
         if (groups != null) {
@@ -98,7 +99,8 @@ class ExpandableCalculateBasedList implements ExpandableList {
             return;
         }
         int currentCount = getVisibleItemCount();
-        group.setExpand(false);
+        group.setExpand(false, false);
+        group.registerDataChangedListener(groupDataChangedListener);
         _groups.add(group);
         _expandableModule.notifyItemInserted(currentCount);
     }
@@ -110,7 +112,8 @@ class ExpandableCalculateBasedList implements ExpandableList {
         }
         int currentCount = getVisibleItemCount();
         for (ExpandableGroup group : groups) {
-            group.setExpand(false);
+            group.setExpand(false, false);
+            group.registerDataChangedListener(groupDataChangedListener);
         }
         _groups.addAll(groups);
         _expandableModule.notifyItemRangeInserted(currentCount, groups.size());
@@ -126,6 +129,7 @@ class ExpandableCalculateBasedList implements ExpandableList {
         if (group == null) {
             return null;
         }
+        group.unregisterDataChangedListener(groupDataChangedListener);
         if (group.isExpand()) {
             _expandableModule.notifyItemRangeRemoved(groupPosition, group.getItemCount() + 1);
         } else {
@@ -163,7 +167,11 @@ class ExpandableCalculateBasedList implements ExpandableList {
 
     @Override
     public void removeAll() {
-        _groups.clear();
+        List<ExpandableGroup> groupList = _groups;
+        for (ExpandableGroup group : groupList) {
+            group.unregisterDataChangedListener(groupDataChangedListener);
+        }
+        groupList.clear();
         _expandableModule.notifyDataSetChanged();
     }
 
@@ -177,7 +185,7 @@ class ExpandableCalculateBasedList implements ExpandableList {
         if (group.isExpand()) {
             return;
         }
-        group.setExpand(true);
+        group.setExpand(true, false);
         _expandableModule.notifyItemChanged(groupPosition);
         _expandableModule.notifyItemRangeInserted(groupPosition + 1, group.getItemCount());
     }
@@ -192,7 +200,7 @@ class ExpandableCalculateBasedList implements ExpandableList {
         if (!group.isExpand()) {
             return;
         }
-        group.setExpand(false);
+        group.setExpand(false, false);
         _expandableModule.notifyItemChanged(groupPosition);
         _expandableModule.notifyItemRangeRemoved(groupPosition + 1, group.getItemCount());
     }
@@ -210,4 +218,11 @@ class ExpandableCalculateBasedList implements ExpandableList {
         unFlat(flyweight, position);
         collapseGroup(flyweight.getGroupIndex());
     }
+
+    private GroupDataChangedListener groupDataChangedListener = new GroupDataChangedListener() {
+        @Override
+        public void onDataChanged() {
+            _expandableModule.notifyDataSetChanged();
+        }
+    };
 }

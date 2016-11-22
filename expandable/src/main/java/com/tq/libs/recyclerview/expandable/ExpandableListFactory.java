@@ -8,11 +8,16 @@
 
 package com.tq.libs.recyclerview.expandable;
 
+import android.support.annotation.NonNull;
+
+import com.tq.libs.recyclerview.expandable.anotations.ListType;
+
 import java.util.List;
 
 public class ExpandableListFactory {
 
-    public static ExpandableList createList(String type, BaseExpandableRecyclerViewModule module,
+    public static ExpandableList createList(@ListType String type,
+                                            @NonNull BaseExpandableRecyclerViewModule module,
                                             List<? extends ExpandableGroup> groups) {
         if ("calculate".equals(type)) {
             return new ExpandableCalculateBasedList(module, groups);

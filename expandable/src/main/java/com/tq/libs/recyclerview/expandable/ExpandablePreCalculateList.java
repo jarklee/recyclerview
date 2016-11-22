@@ -8,6 +8,7 @@
 
 package com.tq.libs.recyclerview.expandable;
 
+import android.support.annotation.NonNull;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 
@@ -30,7 +31,7 @@ class ExpandablePreCalculateList implements ExpandableList {
 
     private int _itemCount;
 
-    ExpandablePreCalculateList(BaseExpandableRecyclerViewModule expandableModule,
+    ExpandablePreCalculateList(@NonNull BaseExpandableRecyclerViewModule expandableModule,
                                List<? extends ExpandableGroup> groups) {
         this._expandableModule = expandableModule;
         if (groups != null) {
@@ -109,7 +110,8 @@ class ExpandablePreCalculateList implements ExpandableList {
             return;
         }
         int currentCount = getVisibleItemCount();
-        group.setExpand(false);
+        group.setExpand(false, false);
+        group.registerDataChangedListener(groupDataChangedListener);
         _groups.add(group);
         updateObjects();
         _expandableModule.notifyItemInserted(currentCount);
@@ -122,7 +124,8 @@ class ExpandablePreCalculateList implements ExpandableList {
         }
         int currentCount = getVisibleItemCount();
         for (ExpandableGroup group : groups) {
-            group.setExpand(false);
+            group.setExpand(false, false);
+            group.registerDataChangedListener(groupDataChangedListener);
         }
         _groups.addAll(groups);
         updateObjects();
@@ -135,6 +138,7 @@ class ExpandablePreCalculateList implements ExpandableList {
         if (group == null) {
             return null;
         }
+        group.unregisterDataChangedListener(groupDataChangedListener);
         int groupPosition = _cacheGroupPosition.get(groupIndex, -1);
         updateObjects();
         if (groupPosition == -1) {
@@ -151,7 +155,10 @@ class ExpandablePreCalculateList implements ExpandableList {
 
     @Override
     public void removeAll() {
-        _groups.clear();
+        List<ExpandableGroup> groupList = _groups;
+        for (ExpandableGroup group : groupList) {
+            group.unregisterDataChangedListener(groupDataChangedListener);
+        }
         updateObjects();
         _expandableModule.notifyDataSetChanged();
     }
@@ -163,7 +170,7 @@ class ExpandablePreCalculateList implements ExpandableList {
             return;
         }
         int groupPosition = _cacheGroupPosition.get(groupIndex);
-        group.setExpand(true);
+        group.setExpand(true, false);
         updateObjects();
         _expandableModule.notifyItemChanged(groupPosition);
         _expandableModule.notifyItemRangeInserted(groupPosition + 1, group.getItemCount());
@@ -176,7 +183,7 @@ class ExpandablePreCalculateList implements ExpandableList {
             return;
         }
         int groupPosition = _cacheGroupPosition.get(groupIndex);
-        group.setExpand(false);
+        group.setExpand(false, false);
         updateObjects();
         _expandableModule.notifyItemChanged(groupPosition);
         _expandableModule.notifyItemRangeRemoved(groupPosition + 1, group.getItemCount());
@@ -191,4 +198,11 @@ class ExpandablePreCalculateList implements ExpandableList {
     public void collapseGroupContainChild(int position) {
         collapseGroup(_cacheGroupIndex.get(position));
     }
+
+    private GroupDataChangedListener groupDataChangedListener = new GroupDataChangedListener() {
+        @Override
+        public void onDataChanged() {
+            _expandableModule.notifyDataSetChanged();
+        }
+    };
 }

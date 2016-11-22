@@ -10,6 +10,8 @@ package com.tq.libs.recyclerview.expandable;
 
 import android.view.ViewGroup;
 
+import com.tq.libs.recyclerview.expandable.anotations.ListType;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -20,20 +22,8 @@ public abstract class BaseExpandableRecyclerViewModule<PARENT extends GroupViewH
     private final ExpandableList _expandableList;
     private final UnFlatGroupFlyweight _flatGroup;
 
-    public BaseExpandableRecyclerViewModule() {
-        this(null, "calculate");
-    }
-
-    public BaseExpandableRecyclerViewModule(String expandableListType) {
-        this(null, expandableListType);
-    }
-
-    public BaseExpandableRecyclerViewModule(List<? extends ExpandableGroup> expandableGroups) {
-        this(expandableGroups, "calculate");
-    }
-
     public BaseExpandableRecyclerViewModule(List<? extends ExpandableGroup> expandableGroups,
-                                            String expandableListType) {
+                                            @ListType String expandableListType) {
         _flatGroup = new UnFlatGroupFlyweight();
         _expandableList = ExpandableListFactory.createList(expandableListType, this, expandableGroups);
     }
