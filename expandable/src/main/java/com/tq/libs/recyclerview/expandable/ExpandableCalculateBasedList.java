@@ -29,13 +29,13 @@ class ExpandableCalculateBasedList implements ExpandableList {
         } else {
             this._groups = new ArrayList<>();
         }
+        for (ExpandableGroup group : _groups) {
+            group.registerDataChangedListener(groupDataChangedListener);
+        }
     }
 
     private int numberOfVisibleItemsInGroup(int group) {
         ExpandableGroup expandableGroup = _groups.get(group);
-        if (expandableGroup == null) {
-            return 0;
-        }
         if (expandableGroup.isExpand()) {
             return expandableGroup.getItemCount() + 1;
         }
@@ -70,10 +70,6 @@ class ExpandableCalculateBasedList implements ExpandableList {
         int groupPosition = 0;
         List<ExpandableGroup> groupList = _groups;
         for (ExpandableGroup expandableGroup : groupList) {
-            if (expandableGroup == null) {
-                groupIndex++;
-                continue;
-            }
             int groupChildCount = expandableGroup.isExpand() ? expandableGroup.getItemCount() : 0;
             int upperGroupPositionLimit = groupPosition + groupChildCount;
 
@@ -217,6 +213,31 @@ class ExpandableCalculateBasedList implements ExpandableList {
         UnFlatGroupFlyweight flyweight = new UnFlatGroupFlyweight();
         unFlat(flyweight, position);
         collapseGroup(flyweight.getGroupIndex());
+    }
+
+    @Override
+    public void expandGroupAtPosition(int groupPosition) {
+        UnFlatGroupFlyweight flyweight = new UnFlatGroupFlyweight();
+        unFlat(flyweight, groupPosition);
+        expandGroup(flyweight.getGroupIndex());
+    }
+
+    @Override
+    public void collapseGroupAtPosition(int groupPosition) {
+        UnFlatGroupFlyweight flyweight = new UnFlatGroupFlyweight();
+        unFlat(flyweight, groupPosition);
+        collapseGroup(flyweight.getGroupIndex());
+    }
+
+    @Override
+    public void expandOrCollapseGroupAtPosition(int groupPosition) {
+        UnFlatGroupFlyweight flyweight = new UnFlatGroupFlyweight();
+        unFlat(flyweight, groupPosition);
+        if (flyweight.getGroup().isExpand()) {
+            collapseGroup(flyweight.getGroupIndex());
+        } else {
+            expandGroup(flyweight.getGroupIndex());
+        }
     }
 
     private final GroupDataChangedListener groupDataChangedListener = new GroupDataChangedListener() {

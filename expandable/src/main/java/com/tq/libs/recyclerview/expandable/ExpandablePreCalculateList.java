@@ -39,6 +39,9 @@ class ExpandablePreCalculateList implements ExpandableList {
         } else {
             this._groups = new ArrayList<>();
         }
+        for (ExpandableGroup group : _groups) {
+            group.registerDataChangedListener(groupDataChangedListener);
+        }
         _cachedObject = new SparseArray<>(_groups.size());
         _cacheChildIndex = new SparseIntArray(_groups.size());
         _cacheGroupIndex = new SparseIntArray(_groups.size());
@@ -56,10 +59,6 @@ class ExpandablePreCalculateList implements ExpandableList {
         int currentGroupIndex = 0;
         List<ExpandableGroup> groupList = _groups;
         for (ExpandableGroup group : groupList) {
-            if (group == null) {
-                currentGroupIndex++;
-                continue;
-            }
             itemCount++;
             if (group.isExpand()) {
                 itemCount += group.getItemCount();
@@ -197,6 +196,27 @@ class ExpandablePreCalculateList implements ExpandableList {
     @Override
     public void collapseGroupContainChild(int position) {
         collapseGroup(_cacheGroupIndex.get(position));
+    }
+
+    @Override
+    public void expandGroupAtPosition(int groupPosition) {
+        expandGroup(_cacheGroupIndex.get(groupPosition));
+    }
+
+    @Override
+    public void collapseGroupAtPosition(int groupPosition) {
+        collapseGroup(_cacheGroupIndex.get(groupPosition));
+    }
+
+    @Override
+    public void expandOrCollapseGroupAtPosition(int groupPosition) {
+        int index = _cacheGroupIndex.get(groupPosition);
+        ExpandableGroup group = _groups.get(index);
+        if (group.isExpand()) {
+            collapseGroup(index);
+        } else {
+            expandGroup(index);
+        }
     }
 
     private final GroupDataChangedListener groupDataChangedListener = new GroupDataChangedListener() {

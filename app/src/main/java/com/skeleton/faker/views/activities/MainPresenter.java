@@ -36,6 +36,7 @@ public class MainPresenter extends Presenter<MainMVPView> {
         groupItems1.add("item4");
         MainGroup group1 = new MainGroup("group1", groupItems1);
         group1.setExpand(true);
+        group1.add("item1", false);
 
         List<String> groupItems2 = new ArrayList<>();
         groupItems2.add("item1");
