@@ -1,7 +1,7 @@
 /*
  * ******************************************************************************
  *  Copyright Ⓒ 2016. TrinhQuan. All right reserved
- *  Author: TrinhQuan. Created on 2016/11/20
+ *  Author: TrinhQuan. Created on 2016/11/26
  *  Contact: trinhquan.171093@gmail.com
  * ******************************************************************************
  */
@@ -37,8 +37,8 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    testCompile 'junit:junit:4.12'
     compile project(':core')
+    testCompile 'junit:junit:4.12'
 }
 
 task sourcesJar(type: Jar) {

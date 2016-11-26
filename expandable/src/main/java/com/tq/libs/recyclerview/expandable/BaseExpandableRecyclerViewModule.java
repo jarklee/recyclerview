@@ -23,7 +23,7 @@ public abstract class BaseExpandableRecyclerViewModule<PARENT extends GroupViewH
     private final UnFlatGroupFlyweight _flatGroup;
 
     public BaseExpandableRecyclerViewModule(List<? extends ExpandableGroup> expandableGroups,
-                                            @ExpandableListType String expandableListType) {
+                                            @ExpandableListType.Constraints String expandableListType) {
         _flatGroup = new UnFlatGroupFlyweight();
         _expandableList = ExpandableListFactory.createList(expandableListType, this, expandableGroups);
     }

@@ -6,4 +6,4 @@
  * ******************************************************************************
  */
 
-include ':app', ':core', ':expandable'
+include ':app', ':core', ':expandable', ':pagingable'
