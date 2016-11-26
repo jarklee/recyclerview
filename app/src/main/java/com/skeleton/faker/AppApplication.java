@@ -8,6 +8,7 @@
 package com.skeleton.faker;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 
 import com.skeleton.faker.constants.Constants;
 import com.skeleton.faker.injection.components.ApplicationComponent;

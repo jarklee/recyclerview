@@ -10,7 +10,7 @@ package com.tq.libs.recyclerview.expandable;
 
 import android.view.ViewGroup;
 
-import com.tq.libs.recyclerview.expandable.anotations.ListType;
+import com.tq.libs.recyclerview.expandable.anotations.ExpandableListType;
 
 import java.util.Collection;
 import java.util.List;
@@ -23,7 +23,7 @@ public abstract class BaseExpandableRecyclerViewModule<PARENT extends GroupViewH
     private final UnFlatGroupFlyweight _flatGroup;
 
     public BaseExpandableRecyclerViewModule(List<? extends ExpandableGroup> expandableGroups,
-                                            @ListType String expandableListType) {
+                                            @ExpandableListType String expandableListType) {
         _flatGroup = new UnFlatGroupFlyweight();
         _expandableList = ExpandableListFactory.createList(expandableListType, this, expandableGroups);
     }

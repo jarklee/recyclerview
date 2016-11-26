@@ -10,7 +10,14 @@ package com.tq.libs.recyclerview.expandable.anotations;
 
 import android.support.annotation.StringDef;
 
-@StringDef(value = {"preCalc", "calc"})
-public @interface ListType {
+public interface ExpandableListType {
+
+    String PRE_CALC = "preCalc";
+    String CALC = "calc";
+
+    @StringDef(value = {PRE_CALC, CALC})
+    @interface Constraints {
+
+    }
 
 }

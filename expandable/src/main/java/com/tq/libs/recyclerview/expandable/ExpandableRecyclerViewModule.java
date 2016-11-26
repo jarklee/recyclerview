@@ -12,7 +12,7 @@ import android.annotation.SuppressLint;
 import android.support.annotation.IntRange;
 import android.view.ViewGroup;
 
-import com.tq.libs.recyclerview.expandable.anotations.ListType;
+import com.tq.libs.recyclerview.expandable.anotations.ExpandableListType;
 
 import java.util.List;
 
@@ -22,28 +22,28 @@ public abstract class ExpandableRecyclerViewModule<PARENT extends GroupViewHolde
         extends BaseExpandableRecyclerViewModule<PARENT, CHILD> {
 
     public ExpandableRecyclerViewModule() {
-        this(null, "calc");
+        this(null, ExpandableListType.CALC);
     }
 
-    public ExpandableRecyclerViewModule(@ListType String expandableListType) {
+    public ExpandableRecyclerViewModule(@ExpandableListType.Constraints String expandableListType) {
         this(null, expandableListType);
     }
 
     public ExpandableRecyclerViewModule(List<? extends ExpandableGroup> expandableGroups) {
-        this(expandableGroups, "calc");
+        this(expandableGroups, ExpandableListType.CALC);
     }
 
     public ExpandableRecyclerViewModule(List<? extends ExpandableGroup> expandableGroups,
-                                        @ListType String expandableListType) {
+                                        @ExpandableListType.Constraints String expandableListType) {
         super(expandableGroups, expandableListType);
     }
 
     @Override
     public final ExpandableViewHolder onCreateItemViewHolder(ViewGroup parent, int viewType) {
         if (isChildViewType(viewType)) {
-            return onCreateChildViewHolder(parent, decodeViewTypeMark(viewType, true));
+            return onCreateChildViewHolder(parent, decodeViewTypeMark(viewType));
         }
-        return onCreateGroupViewHolder(parent, decodeViewTypeMark(viewType, false));
+        return onCreateGroupViewHolder(parent, decodeViewTypeMark(viewType));
     }
 
     @Override
@@ -60,39 +60,33 @@ public abstract class ExpandableRecyclerViewModule<PARENT extends GroupViewHolde
         return (viewType & 0x1) != 0;
     }
 
-    private int decodeViewTypeMark(int viewType, boolean isChild) {
-        if (isChild) {
-            viewType = (viewType >> 13) & 0x3ffff;
-        } else {
-            viewType = (viewType >> 1) & 0xfff;
-        }
-        return viewType;
+    private int decodeViewTypeMark(int viewType) {
+        return (viewType >> 1) & 0x3fffffff;
     }
 
     private int encodeViewTypeMark(int viewType, boolean isChild) {
         if (isChild) {
-            viewType = ((viewType << 13) | 0x1fff) & 0x7fffffff;
+            return ((viewType << 1) | 0x1) & 0x7fffffff;
         } else {
-            viewType = (viewType << 1) & 0x1fff;
+            return (viewType << 1) & 0x7fffffff;
         }
-        return viewType;
     }
 
     /**
      * @param groupPosition group position
      * @param childPosition child position in group
-     * @return view type for child view type in range 0..262143
+     * @return view type for child view type in range 0..1073741823
      */
-    @IntRange(from = 0, to = 0x3ffff) // take up 18 bit mark
+    @IntRange(from = 0, to = 0x3fffffff)
     public int getChildViewType(int groupPosition, int childPosition) {
         return 0;
     }
 
     /**
      * @param groupPosition group position
-     * @return view type for group view type in range 0..4095
+     * @return view type for group view type in range 0..1073741823
      */
-    @IntRange(from = 0, to = 0xfff) // take up 12 bit mark
+    @IntRange(from = 0, to = 0x3fffffff)
     public int getGroupViewType(int groupPosition) {
         return 0;
     }
